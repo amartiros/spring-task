@@ -1,11 +1,14 @@
 package com.spring.task.service;
 
+import com.spring.task.exception.ApiException;
 import com.spring.task.model.Post;
 import com.spring.task.model.User;
 import com.spring.task.model.UserResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -39,6 +42,12 @@ public class UserClient {
         return webClient.get()
                 .uri(GET_USER_URI, userId)
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response ->
+                        Mono.error(new ApiException(response.statusCode(), response.toString()))
+                )
+                .onStatus(HttpStatus::is5xxServerError, response ->
+                        Mono.error(new ApiException(response.statusCode(), response.toString()))
+                )
                 .bodyToMono(User.class);
     }
 
@@ -47,6 +56,12 @@ public class UserClient {
                 .uri(uriBuilder -> uriBuilder.path(GET_POSTS_URI)
                         .queryParam("userId", userId).build())
                 .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response ->
+                        Mono.error(new ApiException(response.statusCode(), response.toString()))
+                )
+                .onStatus(HttpStatus::is5xxServerError, response ->
+                        Mono.error(new ApiException(response.statusCode(), response.toString()))
+                )
                 .bodyToFlux(Post.class).collectList();
     }
 }
