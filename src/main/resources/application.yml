@@ -1,4 +1,7 @@
 server:
   port: 9022
   servlet:
-    context-path: ${spring.application.name}/v${spring.application.majorVersion}
+    context-path: /spring-task/v1
+
+services:
+  url: http://jsonplaceholder.typicode.com
