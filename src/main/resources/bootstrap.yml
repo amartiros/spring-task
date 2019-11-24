@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: spring-task
+    majorVersion: 1
+    description: Spring task challange
