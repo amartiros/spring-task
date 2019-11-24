@@ -12,7 +12,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 
 @RunWith(SpringRunner.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerTest {
 
@@ -22,7 +21,7 @@ public class UserControllerTest {
     @Test
     public void testFetchSuccess() {
 
-        webTestClient.get().uri("/springTask/v1/users/6")
+        webTestClient.get().uri("/spring-task/v1/users/6")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
